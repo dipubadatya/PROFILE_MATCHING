@@ -1,0 +1,63 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+
+}
+.top-100 {top: 100%}
+.bottom-100 {bottom: 100%}
+.max-h-select {
+    max-height: 300px;
+}
+html,body{
+    width: 100%;
+    height: 100%;
+}
+
+#dash-container{
+    width: 100%;
+    height: 100%;
+}
+
+#dash-page1{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(241, 241, 241);
+}
+.top{
+    width: 100%;
+    height: 60%;
+}
+
+.top img{
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.bottom{
+    width: 100%;
+height: 40%;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+#profile-dropdown{
+    display: none;
+
+}
+
+
+#dropdownUserAvatarButton{
+    position: relative;
+}
+
+#dropdownUserAvatar{
+    position: absolute;
+
+    top: 180%;
+    right: 10%;
+}

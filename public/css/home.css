@@ -1,0 +1,60 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+
+}
+
+html,body{
+    width: 100%;
+    height: 100%;
+}
+
+#container{
+    width: 100%;
+    height: 100%;
+}
+
+#page2{
+    width: 100%;
+    height: 100%;
+
+}
+
+.top{
+    width: 100%;
+    height: 60%;
+}
+
+.top img{
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.bottom{
+    width: 100%;
+height: 40%;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+#profile-dropdown{
+    display: none;
+
+}
+
+
+#dropdownUserAvatarButton{
+    position: relative;
+}
+
+#dropdownUserAvatar{
+    position: absolute;
+
+    top: 180%;
+    right: 10%;
+}
