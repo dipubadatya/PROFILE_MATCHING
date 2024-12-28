@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/navbar.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body >
+    <nav class="relative shadow-xl text-white-700">
+        <div class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
+            <div class="flex items-center justify-between text-black-500">
+                <div class="logo" style="display: flex;align-items: center;justify-content: center; gap: 5px;">
+                    <a href="#">
+                        <img class="w-auto h-6 sm:h-7"
+                            src="https://upload.wikimedia.org/wikipedia/en/e/ec/Official_logo_of_Biju_Patanaik_University_of_Technology.png"
+                            alt="">
+                    </a>
+                    <h3>BPUT</h3>
+                </div>
+              
+                <div class="flex center lg:hidden">
+                    <button type="button"
+                        class="text-gray-500 flex center dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
+                        aria-label="toggle menu">
+                        <svg id="open" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                        </svg>
+
+
+
+                    </button>
+                </div>
+            </div>
+
+
+            <div id="phone-dropdown"
+                class="absolute inset-x-0 z-20 w-full px-6 hidden py-4 transition-all duration-300 ease-in-out bg-white  md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center">
+                <div class="flex flex-col md:flex-row md:mx-6">
+                    <a id="chat-opn" class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                    href="#"> <i class="ri-chat-smile-ai-fill"></i></a>
+                    <a class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                        href="#">Home</a>
+                   
+               
+                    <a id="dropdownUserAvatarButton"
+                        class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                        href="#">Profile</a>
+                       
+                        
+
+                </div>
+
+
+
+
+               
+                <div id="dropdownUserAvatar" style="display: none;">
+                    <div id="dropdownAvatar"
+                        class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-white-700 dark:divide-gray-600">
+                        <div class="px-4 py-3 text-sm text-gray-900 dark:black-white">
+                            <div>ADMIN</div>
+                            <div class="font-medium truncate">@BPUT.UNIVERSITY</div>
+                        </div>
+                        <ul class="py-2 text-sm text-gray-700 dark:text-black-200"
+                            aria-labelledby="dropdownUserAvatarButton">
+                            <%  if (user.role === 'admin'){ %>
+                            <li>
+                                <a href="/admin/dashboard"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                            </li>
+                            <% }else{%>
+                            <li>
+                                <a href="/company/dashboard"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Dashboard</a>
+                            </li>
+                            <% } %>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"></a>
+                            </li>
+                        </ul>
+                        <% if(currUser){ %>
+                        <div class="py-2">
+                            <a href="/logout"
+                                class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-black-200 dark:hover:text-white">Sign
+                                out</a>
+                        </div>
+                        <% }else{ %>
+                        <div class="py-2">
+                            <a href="/login"
+                                class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-black-200 dark:hover:text-white">Sign
+                                in</a>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
+            </div>
+    </nav>
+<div class="h-80 bg-blue-500 flex items-center justify-center px-4">
+    
+    <div class="max-w-4xl  bg-white w-full rounded-lg shadow-xl">
+        <div class="p-4 border-b">
+            <h2 class="text-2xl ">
+                YOUR REQUIREMENTS
+            </h2>
+          
+        </div>
+        <div>
+            <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
+                <p class="text-gray-600">
+                   SKILLS
+                </p>
+                <p>
+                <%=skills %>
+                </p>
+            </div>
+            <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
+                <p class="text-gray-600">
+                    CERTIFICATES
+                </p>
+                <p>
+                <%=certificate %>
+                 
+                </p>
+            </div>
+           
+            <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4">
+                <p class="text-gray-600">
+                   <b><%=students.length%></b> <% if(students.length > 1){%> 
+                    STUDENTS 
+                    <% }else{ %>
+                         STUDENT 
+                         <% } %> MATCH  YOUR REQUIREMENTS
+                           
+                
+                </p>
+               
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- support me by buying a coffee -->
+    
+</div>
+<ul role="list" class="grid grid-cols-1 gap-6 bg-yellow sm:grid-cols-2 lg:grid-cols-3">
+    <% for(students of students){ %>
+       
+    <li class="col-span-1 divide-y divide-gray-200 m-3 rounded-lg bg-white shadow">
+        <a href="/student/<%=students._id%>/matching">
+      <div class="flex w-full items-center justify-between space-x-6 p-6">
+        <div class="flex-1 truncate">
+          <div class="flex items-center space-x-3">
+            <h3 class="truncate text-sm font-medium text-gray-900"><%=students.name%></h3>
+            
+          </div>
+          <p class="mt-1 truncate text-sm text-gray-500"><%=students.department%></p>
+        </div>
+        <img class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" src="<%=students.profilePhoto %>" alt="">
+      </div>
+      <div>
+        <div class="-mt-px flex divide-x divide-gray-200">
+          <div class="flex w-0 flex-1">
+            <a  class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+              <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z" />
+                <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z" />
+              </svg>
+              <%=students.email%>
+            </a>
+          </div>
+          <div class="-ml-px flex w-0 flex-1">
+            <a class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+              <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd" />
+              </svg>
+              <%=students.number%>
+             
+            </a>
+          </div>
+        </div>
+      </div>
+    </a>
+    </li>
+   
+    <% } %>
+   
+   
+  </ul>
+
+
+  <script>
+    let profileDropdown = document.getElementById('dropdownUserAvatarButton');
+       let profile = document.getElementById('dropdownUserAvatar');
+
+       profileDropdown.addEventListener('click', () => {
+
+           profile.style.display = (profile.style.display === "none" || profile.style.display === "") ? "block" : "none";
+
+       });
+       let profil = document.getElementById('phone-dropdown');
+       let open = document.getElementById('open');
+
+       open.addEventListener('click', () => {
+           profil.style.display = (profil.style.display === "none" || profil.style.display === "") ? "block" : "none";
+
+       });
+
+ 
+
+  
+
+</script>
+</body>
+</html>

@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/job-details.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 
 <body>
-
 
     <nav class="relative shadow-xl text-white-700">
         <div class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
@@ -45,8 +46,7 @@
                 <div class="flex flex-col md:flex-row md:mx-6">
                     <a class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
                         href="#">Home</a>
-                    <a class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
-                        href="#">Job Finder</a>
+            
                   
                     <a id="dropdownUserAvatarButton"
                         class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
@@ -68,7 +68,7 @@
                         <ul class="py-2 text-sm text-gray-700 dark:text-black-200"
                             aria-labelledby="dropdownUserAvatarButton">
                             <li>
-                                <a href="/dashboard"
+                                <a href="/admin/dashboard"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
                             </li>
                             <li>
@@ -92,107 +92,79 @@
             </div>
     </nav>
 
-
-    <div class="min-h-full">
-
-
-
-        <main class="lg:col-span-9 xl:col-span-6">
-
-            <div class="mt-4">
-                <h1 class="sr-only">Recent questions</h1>
-                <ul role="list" class="space-y-4">
-<%for(job of jobs){%>
-    <a href="<%=job.redirect_url%>">
-                    <li class="bg-white px-4 py-6 shadow sm:rounded-lg sm:p-6">
-                        <article aria-labelledby="question-title-81614">
-                            <div>
-                                <div class="flex space-x-3">
-                                    <div class="flex-shrink-0">
-                                        <img class="h-10 w-10 rounded-full"
-                                            src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
-                                            alt="">
-                                    </div>
-                                    <div class="min-w-0 flex-1">
-                                        <p class="text-sm font-medium text-gray-900">
-                                            <a href="#" class="hover:underline"><%=job.company.display_name%></a>
-                                        </p>
-                                        <p class="text-sm text-gray-500">
-                                            <a href="#" class="hover:underline">
-                                                <time datetime="2020-12-09T11:43:00"><%=job.created%></time>
-                                            </a>
-                                        </p>
-                                    </div>
-
-                                </div>
-                                <h2 id="question-title-81614" class="mt-4 text-base font-medium text-gray-900"><b>ROLE:</b>
-                                    <%=job.title%></h2>
-                            </div>
-                            <div class="mt-2 space-y-4 text-sm text-gray-700">
-                                <p><%=job.description%></p>
-                                
-                            </div>
-                            <div class="mt-6 flex justify-between space-x-8">
-                                <div class="flex space-x-6">
-                                    <span class="inline-flex items-center text-sm">
-                                        <button type="button"
-                                            class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                                            <svg class="h-5 w-5" x-description="Heroicon name: mini/hand-thumb-up"
-                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                fill="currentColor" aria-hidden="true">
-                                                <path
-                                                    d="M1 8.25a1.25 1.25 0 112.5 0v7.5a1.25 1.25 0 11-2.5 0v-7.5zM11 3V1.7c0-.268.14-.526.395-.607A2 2 0 0114 3c0 .995-.182 1.948-.514 2.826-.204.54.166 1.174.744 1.174h2.52c1.243 0 2.261 1.01 2.146 2.247a23.864 23.864 0 01-1.341 5.974C17.153 16.323 16.072 17 14.9 17h-3.192a3 3 0 01-1.341-.317l-2.734-1.366A3 3 0 006.292 15H5V8h.963c.685 0 1.258-.483 1.612-1.068a4.011 4.011 0 012.166-1.73c.432-.143.853-.386 1.011-.814.16-.432.248-.9.248-1.388z">
-                                                </path>
-                                            </svg>
-                                            <span class="font-medium text-gray-900">29</span>
-                                            <span class="sr-only">likes</span>
-                                        </button>
-                                    </span>
-                                    <span class="inline-flex items-center text-sm">
-                                        <button type="button"
-                                            class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                                            <svg class="h-5 w-5"
-                                                x-description="Heroicon name: mini/chat-bubble-left-ellipsis"
-                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902.848.137 1.705.248 2.57.331v3.443a.75.75 0 001.28.53l3.58-3.579a.78.78 0 01.527-.224 41.202 41.202 0 005.183-.5c1.437-.232 2.43-1.49 2.43-2.903V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zm0 7a1 1 0 100-2 1 1 0 000 2zM8 8a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                            <span class="font-medium text-gray-900">11</span>
-                                            <span class="sr-only">replies</span>
-                                        </button>
-                                    </span>
-                                    <span class="inline-flex items-center text-sm">
-                                        <button type="button"
-                                            class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                                            <svg class="h-5 w-5" x-description="Heroicon name: mini/eye"
-                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                fill="currentColor" aria-hidden="true">
-                                                <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"></path>
-                                                <path fill-rule="evenodd"
-                                                    d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                            <span class="font-medium text-gray-900">2.7k</span>
-                                            <span class="sr-only">views</span>
-                                        </button>
-                                    </span>
-                                </div>
-                            
-                            </div>
-                        </article>
-                    </li>
-                </a>
-<% } %>
-            </div>
-    </div>
-    </div>
-
-    </div>
+    <div id="title">
+        <div class="text">Jobs for you</div>
+        <div>
 
 
-  
+   
+
+
+        <div
+            class="relative flex min-h-screen flex-col jus items-center justify-center overflow-hidden bg-gray-50 p-6 sm:py-12">
+            <% for(job of jobs){ %>
+                <div
+                    class="bg-white  shadow-xl mt-2 shadow-gray-100 w-full max-w-4xl flex flex-col sm:flex-row gap-3 sm:items-center  justify-between px-5 py-4 rounded-md">
+                    <div>
+                        <span class="text-purple-800 text-sm">
+                            <%=job.company.display_name%>
+                        </span>
+                        <h3 class="font-bold mt-px">
+                            <%=job.title%>
+                        </h3>
+                        <div class="flex items-center gap-3 mt-2">
+                            <span class="bg-purple-100 text-purple-700 rounded-full px-3 py-1 text-sm"><%=job.contract_time%></span>
+                            <span class="text-slate-600 text-sm flex gap-1 items-center"> <svg
+                                    xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <%=job.location.display_name%>
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="<%=job.redirect_url%>">
+                        <button
+                            class="bg-purple-900 text-white font-medium px-4 py-2 rounded-md flex gap-1 items-center">Apply
+                            Now 
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                            </svg></button>
+                        </a>
+                    </div>
+                </div>
+                <% } %>
+
+        </div>
+    
+
+
+
+
+
+
+
+<script> 
+let profileDropdown = document.getElementById('dropdownUserAvatarButton');
+    let profile = document.getElementById('dropdownUserAvatar');
+
+    profileDropdown.addEventListener('click', () => {
+
+        profile.style.display = (profile.style.display === "none" || profile.style.display === "") ? "block" : "none";
+
+    });
+    let profil = document.getElementById('phone-dropdown');
+    let open = document.getElementById('open');
+
+    open.addEventListener('click', () => {
+        profil.style.display = (profil.style.display === "none" || profil.style.display === "") ? "block" : "none";
+
+    });
+    </script>
 </body>
 
 </html>

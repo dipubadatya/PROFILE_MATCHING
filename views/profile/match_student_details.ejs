@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/navbar.css">
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <nav class="relative shadow-xl text-white-700">
+        <div class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
+            <div class="flex items-center justify-between text-black-500">
+                <div class="logo" style="display: flex;align-items: center;justify-content: center; gap: 5px;">
+                    <a href="#">
+                        <img class="w-auto h-6 sm:h-7"
+                            src="https://upload.wikimedia.org/wikipedia/en/e/ec/Official_logo_of_Biju_Patanaik_University_of_Technology.png"
+                            alt="">
+                    </a>
+                    <h3>BPUT</h3>
+                </div>
+              
+                <div class="flex center lg:hidden">
+                    <button type="button"
+                        class="text-gray-500 flex center dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
+                        aria-label="toggle menu">
+                        <svg id="open" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                        </svg>
+
+
+
+                    </button>
+                </div>
+            </div>
+
+
+            <div id="phone-dropdown"
+                class="absolute inset-x-0 z-20 w-full px-6 hidden py-4 transition-all duration-300 ease-in-out bg-white  md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center">
+                <div class="flex flex-col md:flex-row md:mx-6">
+                    <a id="chat-opn" class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                    href="#"> <i class="ri-chat-smile-ai-fill"></i></a>
+                    <a class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                        href="#">Home</a>
+                   
+               
+                    <a id="dropdownUserAvatarButton"
+                        class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                        href="#">Profile</a>
+                       
+                        
+
+                </div>
+
+
+
+
+               
+                <div id="dropdownUserAvatar" style="display: none;">
+                    <div id="dropdownAvatar"
+                        class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-white-700 dark:divide-gray-600">
+                        <div class="px-4 py-3 text-sm text-gray-900 dark:black-white">
+                            <div>ADMIN</div>
+                            <div class="font-medium truncate">@BPUT.UNIVERSITY</div>
+                        </div>
+                        <ul class="py-2 text-sm text-gray-700 dark:text-black-200"
+                            aria-labelledby="dropdownUserAvatarButton">
+                            <%  if (user.role === 'admin'){ %>
+                            <li>
+                                <a href="/admin/dashboard"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                            </li>
+                            <% }else{%>
+                            <li>
+                                <a href="/company/dashboard"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Dashboard</a>
+                            </li>
+                            <% } %>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"></a>
+                            </li>
+                        </ul>
+                        <% if(currUser){ %>
+                        <div class="py-2">
+                            <a href="/logout"
+                                class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-black-200 dark:hover:text-white">Sign
+                                out</a>
+                        </div>
+                        <% }else{ %>
+                        <div class="py-2">
+                            <a href="/login"
+                                class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-black-200 dark:hover:text-white">Sign
+                                in</a>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
+            </div>
+    </nav>
+    <div class="bg-white overflow-hidden shadow  rounded-lg border">
+
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Student Profile
+            </h3>
+
+            <p class="mt-1 max-w-2xl text-sm text-black-500">
+            <div class="inline-block mb-4 relative shrink-0 rounded-[.95rem]">
+                <img class="inline-block  shrink-0 rounded-[.95rem] w-[150px] h-[150px]"
+                    src="<%=student.profilePhoto%>" alt="avarat image">
+            </div>
+            </p>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        College name
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.college %> , <%=student.university%>
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Full name
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.name %>
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Email address
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.email %>
+
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Phone number
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.number %>
+
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Address
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.address%><br>
+
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Gender
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.gender%><br>
+
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Branch
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.department%><br>
+
+                    </dd>
+                </div>
+              
+                
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Cgpa
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <%=student.cgpa%><br>
+
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        Skills
+                    </dt>
+                    <dd id="search2"
+                        class="mt-1 text-sm text-gray-900 sm:mt-0 leading-loose tracking-wide  sm:col-span-2">
+                        <%=student.skills%><br>
+
+                    </dd>
+                </div>
+                    <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            certificates
+                        </dt>
+                        <dd id="search2"
+                            class="mt-1 text-sm text-gray-900 sm:mt-0 leading-loose tracking-wide  sm:col-span-2">
+                            <%=student.certificate%><br>
+
+                        </dd>
+                    </div>
+            </dl>
+        </div>
+    </div>
+
+
+
+    <script>
+        let profileDropdown = document.getElementById('dropdownUserAvatarButton');
+           let profile = document.getElementById('dropdownUserAvatar');
+
+           profileDropdown.addEventListener('click', () => {
+
+               profile.style.display = (profile.style.display === "none" || profile.style.display === "") ? "block" : "none";
+
+           });
+           let profil = document.getElementById('phone-dropdown');
+           let open = document.getElementById('open');
+
+           open.addEventListener('click', () => {
+               profil.style.display = (profil.style.display === "none" || profil.style.display === "") ? "block" : "none";
+
+           });
+    
+     
+
+      
+  
+   </script>
+</body>
+</html>

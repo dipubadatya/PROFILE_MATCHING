@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Bridge Search</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+
+    <div id="dash-container">
+
+        <nav class="relative shadow-xl text-white-700">
+            <div class="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
+                <div class="flex items-center justify-between text-black-500">
+                    <div class="logo" style="display: flex;align-items: center;justify-content: center; gap: 5px;">
+                        <a href="#">
+                            <img class="w-auto h-6 sm:h-7"
+                                src="https://upload.wikimedia.org/wikipedia/en/e/ec/Official_logo_of_Biju_Patanaik_University_of_Technology.png"
+                                alt="">
+                        </a>
+                        <h3>BPUT</h3>
+                    </div>
+
+                    <div class="flex center lg:hidden">
+                        <button type="button"
+                            class="text-gray-500 flex center dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
+                            aria-label="toggle menu">
+                            <svg id="open" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                            </svg>
+
+
+
+                        </button>
+                    </div>
+                </div>
+
+
+                <div id="phone-dropdown"
+                    class="absolute inset-x-0 z-20 w-full px-6 hidden py-4 transition-all duration-300 ease-in-out bg-white  md:mt-0 md:p-0 md:top-0 md:relative md:bg-transparent md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center">
+                    <div class="flex flex-col md:flex-row md:mx-6">
+                        <a class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                            href="#">Home</a>
+                      
+
+                        <a id="dropdownUserAvatarButton"
+                            class="my-2 text-gray-700 transition-colors duration-300 transform dark:text-black-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                            href="#">Profile</a>
+
+                    </div>
+
+
+
+
+                    <div id="dropdownUserAvatar" style="display: none;">
+                        <div id="dropdownAvatar"
+                            class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-white-700 dark:divide-gray-600">
+                            <div class="px-4 py-3 text-sm text-gray-900 dark:black-white">
+                                <div>ADMIN</div>
+                                <div class="font-medium truncate">@BPUT.UNIVERSITY</div>
+                            </div>
+                            <ul class="py-2 text-sm text-gray-700 dark:text-black-200"
+                                aria-labelledby="dropdownUserAvatarButton">
+                                <li>
+                                    <a href="/admin/dashboard"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="/student"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Add
+                                        Student</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"></a>
+                                </li>
+                            </ul>
+                            <div class="py-2">
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-black-200 dark:hover:text-white">Sign
+                                    out</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+        </nav>
+
+        <!-- <div id="alert">
+            <div id="alert-txt">add student</div>
+            <div id="alert-cls"><i class="ri-close-line"></i></div>
+          </div>
+        <div id="dash-page1"> -->
+
+
+        <% if(success && success.length){ %>
+            <div id="alert" class="rounded-xl border border-gray-100 bg-white p-4">
+                <div class="flex items-start gap-4">
+
+
+                    <div class="flex-1">
+
+
+                        <p class="mt-1 text-sm text-gray-700">
+                            <%=success%>
+                        </p>
+                    </div>
+
+                    <button class="text-gray-500 transition hover:text-gray-600">
+
+
+                        <i id="alt-cls" class="ri-close-line"></i>
+                    </button>
+                </div>
+            </div>
+            <% } %>
+                <div class="flex h-screen bg-gray-200">
+
+
+                    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+
+
+                        <div class="flex flex-col h-10 m-3 items-center">
+                            <div class="w-full md:w-1/2 flex flex-col items-center h-64">
+                                <div class="w-full px-4">
+                                    <div class="flex flex-col items-center relative">
+                                        <div class="w-full absolute">
+                                            <div class="my-2 p-1 bg-white flex border border-gray-200 rounded">
+                                                <div class="flex flex-auto flex-wrap"></div>
+                                                <input id="search" placeholder="Search by registartion number"
+                                                    class="p-1 px-2 appearance-none outline-none w-full text-gray-800">
+                                                <div
+                                                    class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200">
+                                                    <button
+                                                        class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="100%"
+                                                            height="100%" fill="none" viewBox="0 0 24 24"
+                                                            stroke="currentColor" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            class="feather feather-chevron-up w-4 h-4">
+                                                            <polyline points="18 15 12 9 6 15"></polyline>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="search-result"
+                                            class="absolute shadow bg-white top-100 mt-20 relative z-40 w-full lef-0 rounded max-h-select overflow-y-auto svelte-5uyqqj">
+                                            <div class="flex flex-col w-full">
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container px-6 py-8 mx-auto">
+                            <h3 class="text-3xl font-medium text-gray-700">Dashboard</h3>
+
+                            <div class="mt-4">
+                                <div class="flex flex-wrap -mx-6">
+                                    <div class="w-full px-6 sm:w-1/2 xl:w-1/3">
+                                        <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
+                                            <div class="p-3  bg-opacity-75 rounded-full">
+
+
+                                                <i class="ri-group-fill"></i>
+
+                                            </div>
+
+                                            <div class="mx-5">
+                                                <h4 class="text-2xl font-semibold text-gray-700">
+                                                    <%=students.length%>
+                                                </h4>
+                                                <div class="text-gray-500">STUDENTS</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="w-full  px-6 mt-6 sm:w-1/2 xl:w-1/3 sm:mt-0">
+                                        <a href="/student">
+                                            <div
+                                                class="flex h-full items-center px-5 py-6  bg-white rounded-md shadow-sm">
+                                                <div class="p-3 bg-white  rounded-half">
+                                                    <i class="ri-user-add-fill"></i>
+                                                </div>
+
+                                                <div class="mx-5" id="user">
+                                                    <h4 class="text-2xl font-semibold  text-black">Add Student</h4>
+
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="mt-8">
+
+                            </div>
+
+                            <div class="flex flex-col mt-8">
+                                <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+                                    <div
+                                        class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
+                                        <table class="min-w-full">
+                                            <thead>
+                                                <tr>
+                                                    <th
+                                                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                                        Name</th>
+                                                    <th
+                                                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                                        BRANCH</th>
+                                                    <th
+                                                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                                        Number</th>
+                                                    <th
+                                                        class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                                        Registration Number</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="bg-white">
+                                                <%for(student of students){%>
+                                                    <tr>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                                            <div class="flex items-center">
+                                                                <div class="flex-shrink-0 w-10 h-10">
+                                                                    <img class="w-10 h-10 rounded-full"
+                                                                        src="<%=student.profilePhoto%>" alt="">
+                                                                </div>
+
+                                                                <div class="ml-4">
+                                                                    <div
+                                                                        class="text-sm font-medium leading-5 text-gray-900">
+                                                                        <%=student.name%>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                        <td
+                                                            class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                                            <div class="text-sm leading-5 text-gray-900">
+                                                                <%=student.department%>
+                                                            </div>
+
+                                                        </td>
+
+                                                        <td
+                                                            class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                                            <span
+                                                                class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
+                                                                <%=student.number%>
+                                                            </span>
+                                                        </td>
+
+                                                        <td
+                                                            class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200">
+                                                            <%=student.registrationNumber%>
+                                                        </td>
+
+                                                        <td
+                                                            class="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap border-b border-gray-200">
+                                                            <a href="/student/<%=student._id%>"
+                                                                class="text-indigo-600 hover:text-indigo-900">View</a>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+    </div>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        let profileDropdown = document.getElementById('dropdownUserAvatarButton');
+        let profile = document.getElementById('dropdownUserAvatar');
+
+        profileDropdown.addEventListener('click', () => {
+
+            profile.style.display = (profile.style.display === "none" || profile.style.display === "") ? "block" : "none";
+
+        });
+        let profil = document.getElementById('phone-dropdown');
+        let open = document.getElementById('open');
+
+        open.addEventListener('click', () => {
+            profil.style.display = (profil.style.display === "none" || profil.style.display === "") ? "block" : "none";
+
+        });
+
+        let inp = document.getElementById('search')
+        let clutter = "";
+        inp.addEventListener("input", () => {
+            axios.get(`/search/${inp.value}`).then((data) => {
+                clutter = ""
+
+                data.data.forEach(elem => {
+                    clutter +=
+
+                        ` <ul>
+      
+
+              <a href="/student/${elem._id}">      
+     
+                                                <div
+                                                    class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-teal-100">
+                                                    <div class="w-6 flex flex-col items-center">
+                                                        <div
+                                                            class="flex relative w-5 h-5 bg-orange-500 justify-center items-center m-1 mr-2 w-4 h-4 mt-1 rounded-full ">
+                                                            <img class="rounded-full" alt="A"
+                                                                src="${elem.profilePhoto}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="w-full items-center flex">
+                                                        <div class="mx-2 -mt-1  ">${elem.name}
+                                                            <div
+                                                                class="text-xs truncate w-full normal-case font-normal -mt-1 text-gray-500">
+                                                        ${elem.department}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+    </a>`
+
+
+                });
+
+
+                document.getElementById('search-result').innerHTML = clutter;
+            })
+        })
+        setTimeout(() => {
+            const alertDiv = document.getElementById('alert');
+            alertDiv.style.display = 'none';
+
+        }, 3000);
+
+    </script>
+</body>
+
+</html>

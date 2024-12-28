@@ -1,32 +1,27 @@
 const mongoose = require('mongoose');
+const { type } = require('os');
 
 
 const jobSchema=new mongoose.Schema({
+ 
     title: {
         type: String,
         required: true
     },
-    company: {
-        type: String,
-        required: true
-    },
-    location: {
-        type: String,
-        required: true
-    },
-    salary: {
-        type: Number,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    postedDate: {
-        type: Date,
-        default: Date.now
-    }
+   
+  cgpa:{
+    type: String,
 
+  },
+  skills:{
+    type: [],
+    required: true
+  },
+certificate:{
+    type: [],
+    required: true
+  },
+  company: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 
 
 })

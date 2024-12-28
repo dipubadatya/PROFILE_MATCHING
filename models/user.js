@@ -8,7 +8,7 @@ const passportLocalMongoose = require("passport-local-mongoose")
 
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     Required:true
   },
@@ -20,9 +20,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     Required:true
   },
+  role: {
+    type: String,
+    enum: ['admin', 'company'],
+
+  },
+  jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],
   
 });
 
+//  userSchema.plugin(passportLocalMongoose,)
 
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 module.exports = mongoose.model('User', userSchema);
