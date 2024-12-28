@@ -11,33 +11,34 @@ const passportLocalMongoose = require('passport-local-mongoose')
 const MongoStore = require('connect-mongo')
 const session = require('express-session')
 const flash=require('connect-flash')
-const cloudinary=require('cloudinary')
+const cloudinary=require('cloudinary').v2
 const User = require('./models/user')
 const Job=require('./models/job')
 const Student=require('./models/studentDetails')
 const axios=require('axios')
+const bodyParser = require('body-parser')
+const cors = require('cors');
+const fs = require('fs');
+const marked = require('marked');
+const methodOverride = require("method-override");
+const multer = require('multer');
+const { storage } = require('./cloudinary');
 const { log } = require('console')
-const { Logger } = require('mongodb')
+const PDFDocument = require('pdfkit');
+const { GoogleGenerativeAI} = require('@google/generative-ai');
+const upload = multer({ storage })
+const bcrypt = require('bcrypt');
+const uploads = multer({ dest: 'uploads/' }); // Change the 'uploads/' path as needed
+
+app.use(bodyParser.json()); 
 
 
 
-// app.use(session({
-//     secret: 'your-secret-key',
-//     resave: false,
-//     saveUninitialized: true
-// }));
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(flash());
 
-// Cloudinary configuration
-// cloudinary.config({
-//     cloud_name: 'your-cloud-name',
-//     api_key: 'your-api-key',
-//     api_secret: 'your-api-secret'
-// });
 
 let dbUrl=process.env.MONGODB_URL
+console.log(dbUrl);
+
 connectDB().then(()=>{
     console.log('db connect succsesfuly')
  })
@@ -45,7 +46,9 @@ connectDB().then(()=>{
 
 async function connectDB() {
     try {
-        await mongoose.connect(dbUrl)
+        await mongoose.connect(dbUrl,{
+            useNewUrlParser: true, useUnifiedTopology: true
+        })
             
        
     
@@ -61,28 +64,30 @@ async function connectDB() {
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))
+
+
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(methodOverride("_method"));
+app.use(cors());
 
-app.get('/', (req, res) => {
-    res.render('./profile/home.ejs')
-   
-})
+
 
 
 
 const store = MongoStore.create({
     mongoUrl:dbUrl,
     crypto: {
-        secret: process.env.SECRET
+        secret: "epiccoders"
     },
     touchAfter: 24 * 3600
 })
 
 
+
 const sessionOption = {
     store,
-    secret: process.env.SECRET,
+    secret:"epiccoders",
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -93,7 +98,7 @@ const sessionOption = {
 
 }
   
-  
+
    
   store.on('error',()=>{
     console.log('session error', err)
@@ -102,7 +107,7 @@ const sessionOption = {
   
   passport.use(passport.initialize())
   passport.use(passport.session())
-  // passport.use(new LocalStrategy(User.authenticate()))
+//   passport.use(new LocalStrategy(User.authenticate()))
   passport.use(User.createStrategy());
   
   passport.serializeUser(User.serializeUser())
@@ -113,161 +118,371 @@ const sessionOption = {
   app.use(passport.initialize())
   app.use(passport.session())
   
+ 
+
   
+ 
+
+
   
-  app.use((req,res,next)=>{
+
+  
+
+  
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+   res.locals.currUser=req.user
+    next()
+})
+
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+};
+
+
+app.get('/', (req, res) => {
+    const user = req.user || {};;
+    console.log(user);
     
-    // res.locals.success=req.flash('success');
-    // res.locals.error=req.flash('error');
-    res.locals.currUser=req.user;
+    res.render('./profile/home.ejs',{user})
+
+})
+
+
+
+
+
+
+app.post('/match/student', async (req, res) => {
+    try {
+  let user=req.user._id
+
+      let { skills, certificate  } = req.body;
+  
+   
+      skills = skills.split(',').map(skill => skill.trim());
+      certificate = certificate.split(',').map(cert => cert.trim());
+      if (!skills.length && !certificate.length) {
+        return res.status(400).json({ error: "Please provide skills or certificates." });
+      }
+  
+      const query = {
+        $or: [
+          { skills: { $in: skills.map(skill => new RegExp(skill, 'i')) } },
+          { certificates: { $in: certificate.map(cert => new RegExp(cert, 'i')) } }
+        ]
+      };
+   
+      const students = await Student.find(query);
+  
+  
+      const rankedStudents = students.map(student => {
+   
+        const skillMatch = (student.skills || []).filter(skill => skills.includes(skill)).length;
+        const certMatch = (student.certificates || []).filter(cert => certificate.includes(cert)).length;
+        const matchScore = skillMatch + certMatch;
+  
+        
+        return { ...student._doc, matchScore };
+      });
+     
+      const filteredAndRankedStudents = rankedStudents
+        .filter(student => student.matchScore > 0)
+        .sort((a, b) => b.matchScore - a.matchScore);
+  console.log(rankedStudents);
+  
+     res.render('./profile/match-student.ejs',{students,user,skills,certificate})
+    } catch (err) {
+      console.error("Error occurred:", err.message);
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
+
+app.get('/student/:id/matching',async(req,res)=>{
+    try {
+        let user=req.user._id
+        const id = req.params.id;
+        let student=await Student.findById(id)
+        res.render('./profile/match_student_details',{student,user})
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+
+})
+
+app.get('/resume/:id',async(req,res)=>{
+    const id = req.params.id
+let student = await Student.findById(id)
+
+
+
+    res.render('./profile/resume.ejs',{student})
+})
+
+
+app.get('/company',(req,res)=>{
+    res.render('./profile/job_requirement')
    
     
-    next()
-  })
+})
+app.get('/jobs/:id',async(req,res)=>{
+    const id = req.params.id
+    let student =await Student.findById(id)
+    console.log(student.skills);
+   
+    
+})
+
+app.post('/jobs/adzuna', async (req, res) => {
+    
+    const skills = req.body.skills.trim().split(',');
+    
+ 
+
+    try {
+        let jobs = [];
+        for (let skill of skills) {
+            const response = await axios.get(`https://api.adzuna.com/v1/api/jobs/in/search/1`, {
+                params: {
+                    app_id: process.env.ADZUNA_APP_ID,
+                    app_key: process.env.ADZUNA_API_KEY,
+                    what: skill.trim(),
+                  
+                },
+            });
+            
+            if (response.data.results) {
+                jobs = jobs.concat(response.data.results);  
+            }
+        }
+
+console.log(jobs);
+
+res.render('./profile/adzuna',{jobs})
+       
+    } catch (error) {
+        console.error('Error fetching jobs from Adzuna:', error.message);
+        res.status(500).json({ success: false, message: 'Error fetching jobs from Adzuna' });
+    }
+});
+
+
+  const MODEL_NAME = "gemini-pro";
+  const API_KEY = process.env.API_KEY;
+  
+  async function runChat(userInput) {
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+  
+    const generationConfig = {
+      temperature: 0.9,
+      topK: 1,
+      topP: 1,
+      maxOutputTokens: 1000,
+    };
+ 
+  
+    const chat = model.startChat({
+      generationConfig,
+    
+    
+    });
+  
+    const result = await chat.sendMessage(userInput);
+    const response = result.response;
+    return response.text();
+  }
+
   
 
 
 
-// const HUGGINGFACE_API_URL = 'https://api-inference.huggingface.co/models/facebook/bart-large-mnli';
-// const HUGGINGFACE_API_KEY = process.env.HUGGINGFACE_API_KEY;
+  app.get('/chatbot', (req, res) => {
+    res.render('./profile/index.ejs')
+   
+  });
+ 
+  app.post('/chat', async (req, res) => {
+    try {
+      const userInput = req.body?.userInput;
+      console.log('incoming /chat req', userInput)
+      if (!userInput) {
+        return res.status(400).json({ error: 'Invalid request body' });
+      }
+  
+      const response = await runChat(userInput);
+      res.json({ response });
+    } catch (error) {
+      console.error('Error in chat endpoint:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 
-// app.get('/search',(req,res)=>{
-//     res.render('./job_profile/index.ejs')
-// })
-// // Search route
-// app.post('/search', async (req, res) => {
-//     // const { prompt } = req.body;
-//     let prompt={  premise: "find student who knows react",
-//         hypothesis: "This is a statement about a student."}
 
-//     try {
-        
-//         const hfResponse = await axios.post(HUGGINGFACE_API_URL, {
-//             inputs: prompt,
-//         }, {
-//             headers: {
-//                 Authorization: `Bearer ${HUGGINGFACE_API_KEY}`
-//             }
-//         });
 
-//         const responseText = hfResponse.data;
-//         const skills = responseText.inputs
-//             .split(',')
-//             .map(skill => skill.trim().toLowerCase());
 
-//         // Step 2: Query MongoDB for matching students
-//         const matchingStudents = await Student.find({ skills: { $in: skills } });
 
-//         // Step 3: Query MongoDB for matching job profiles
-//         const matchingJobs = await Job.find({ requirements: { $in: skills } });
 
-//         // Step 4: Render results
-//         res.render('results', { students: matchingStudents, jobs: matchingJobs });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Error processing the request');
-//     }
-// });
+app.get('/result',(req,res)=>{
+    res.render('./profile/result.ejs')
+    console.log(req.user);
+})
+
+
 
 
 app.get('/student',(req,res)=>{
     res.render('./user/studentForm')
 })
 
+app.post('/student',upload.single('photo'),async(req,res)=>{
+    try {
+
+       
+        console.log(req.file);
+        let url=req.file.path
+  
+        let newData = new Student(req.body.student)
+      
+      
+   
+        newData.profilePhoto=url ;
+  
+        await newData.save();
+ 
+      
+        res.redirect("/admin/dashboard");
+    } catch (err) {
+        console.error('Save Error:', err.message);
+       
+        res.redirect("/admin/dashboard");
+       
+    }
+
+
+})
+
+
 
 app.get('/student/:id',async(req,res)=>{
     let {id}=req.params
+   
+
     let student=await Student.findById(id)
-    console.log(student);
+
     res.render('./user/studentDetail',{student})
     
 })
-app.get('/dashboard',async(req,res)=>{
+
+app.get('/student/:id/edit',async(req,res)=>{
+    let {id}=req.params
+    let editStudent=await Student.findById(id)
+    res.render('./user/studentEdit',{editStudent})
+})
+
+
+
+app.put('/student/:id', upload.single('student[profilePhoto]'),async (req, res) => {
+    let {id}=req.params
+    
+
+let update = await Student.findByIdAndUpdate(id, { ...req.body.student })
+if(typeof req.file !=='undefined'){
+  let url = req.file.path;
+
+  update.profilePhoto=url
+  update.save()
+  }
+
+  res.redirect(`/student/${id}`)
+
+
+
+})
+
+
+
+app.delete('/student/:id',async(req,res)=>{
+    try {
+        const { id } = req.params;
+        await Student.findByIdAndDelete(id);
+
+       
+        res.redirect('/admin/dashboard');
+
+    } catch (error) {
+        console.error('Error deleting story:', error);
+        res.status(500).send('Internal Server Error');
+    }
+})
+
+
+
+app.get('/company',(req,res)=>{
+    let user=req.user 
+    res.render('./profile/job_requirement.ejs',{user})
+})
+
+
+
+app.get('/admin/dashboard',isAuthenticated,async(req,res)=>{
     let students= await Student.find()
+    let user=req.user
 
     
-    res.render('./user/dashboard',{students})
-})    
-     
+    res.render('./user/admin_dashboard',{students,user})
+})
+
+
+
+
+
+app.get('/company/dashboard',isAuthenticated,async(req,res)=>{
+    
+    let jobs = await User.findById(req.user._id).populate('jobs');
+    console.log(jobs);
+    
+
+  let user=req.user._id
+
+    
+    res.render('./user/company_dashboard',{jobs,user})
+})
+   
+
+  
+
+
 app.get('/search/:regnumber',async(req,res)=>{
   
     let regex=new RegExp(`^${req.params.regnumber}`, 'i');
     const users=await Student.find({registrationNumber:regex});
    res.json(users)
-    
-    
- 
-    
+       
 })
 
 
-// axios.post('https://api-inference.huggingface.co/models/facebook/bart-large-mnli',"find student who knows react" , {
-//     headers: {
-//         'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`,
-//         'Content-Type': 'application/json'
-//     }
-// })
-// .then(response => {
-//     console.log(response.data);
-// })
-// .catch(error => {
-//     if (error.response) {
-//         console.error('Error Data:', error.response.data);
-//         console.error('Error Status:', error.response.status);
-//         console.error('Error Headers:', error.response.headers);
-//     } else {
-//         console.error('Error Message:', error.message);
-//     }
-// });
 
 
 
-
-
-
-
-
-
-// const ADZUNA_API_ID = process.env.ADZUNA_API_ID;
-
-// const ADZUNA_API_KEY = process.env.ADZUNA_API_KEY;
-
-
-// const appId = 'f6293b4c'; // Replace with your actual App ID
-// const appKey = '6f317f7ae7602e3bffb08d393f1ee168'; // Replace with your actual App Key
-// const location = 'India'; // Specify the location
-
-// axios.get(`https://api.adzuna.com/v1/api/jobs/in/search/1`, {
-//     params: {
-//         app_id: appId,
-//         app_key: appKey,
-//         location: location,
-//         results_per_page: 10, // Adjust as needed
-//         page: 1 // Pagination
-//     }
-// })
-// .then(response => {
-//     if (response.data && response.data.results.length > 0) {
-//         console.log('Job Listings:', response.data.results);
-//     } else {
-//         console.log('No job listings found for this location.');
-//     }
-// })
-// .catch(error => {
-//     console.error('Error fetching data:', error);
-// });
-
-// app.get('/signup', (req, res) => {
-//     res.render('./user/signup.ejs')
-// })
+app.get('/signup', (req, res) => {
+    res.render('./user/signup.ejs')
+})
 
 app.post('/register',async (req, res) => {
     try {
-        const { name,  email, password } = req.body;
+        const { username,  email, password,role } = req.body;
 
        
     
-        const user = new User({ name, email });
+        const user = new User({ username, email ,role});
        
         const registerUser = await User.register(user, password);
      
@@ -275,18 +490,38 @@ app.post('/register',async (req, res) => {
             if (err) return next(err);
         
             
-            // req.flash('success', 'Thanks for signing up!');
             res.redirect('/');
         });
 
     } catch (error) {
         console.error(error);
-        // req.flash('error', 'User already exists or an error occurred');
+     
         res.redirect('/signup');
     }
 
 
 })
+
+
+app.post('/student/login', async (req, res) => {
+    const { registrationNumber, number } = req.body;
+
+    try {
+        // Find student in the database
+        const student = await Student.findOne({ registrationNumber, number ,});
+
+        if (!student) {
+            return res.status(401).send('Invalid registration number or phone number ');
+        }
+
+    console.log(student);
+    res.render('./profile/personal_student_details',{student})
+    
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 app.get('/login',(req,res)=>{
@@ -318,7 +553,7 @@ req.logout((err)=>{
         
      }
      req.flash('success', 'loged out')
-     res.redirect('/listings')
+     res.redirect('/')
 })
 
 
@@ -339,6 +574,7 @@ app.use((err, req, res, next) => {
     if (!res.headersSent) {
         res.status(500).send('Something went wrong!');
     }
+  
 });
 
 
